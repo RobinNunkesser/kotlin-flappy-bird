@@ -24,8 +24,8 @@ allprojects {
 	
     ext {
         appName = "KotlinFlappyBird"
-        gdxVersion = '1.9.9'
-        ktxVersion = '1.9.9-SNAPSHOT'
+        gdxVersion = '1.9.10'
+        ktxVersion = '1.9.10-b5'
         coroutinesVersion = '1.1.0-alpha'
         physicsEditorVersion = '1.1.0'
         miopVersion = '0.3.0'
