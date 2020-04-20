@@ -28,12 +28,19 @@ class StartingScreen(private val background: Screen, private val font: BitmapFon
 
   override fun show() {
     Gdx.input.inputProcessor = object : KtxInputAdapter {
-      override fun keyDown(keycode: Int): Boolean {
-        if (keycode == Input.Keys.SPACE) {
-          notifyCompleted()
+        override fun keyDown(keycode: Int): Boolean {
+            if (keycode == Input.Keys.SPACE) {
+                notifyCompleted()
+            }
+            return false
         }
-        return false
-      }
+
+        override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
+            if (button == Input.Buttons.LEFT) {
+                keyDown(Input.Keys.SPACE)
+            }
+            return false
+        }
     }
   }
 

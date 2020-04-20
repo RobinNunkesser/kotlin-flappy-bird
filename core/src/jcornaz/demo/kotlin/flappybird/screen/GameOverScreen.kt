@@ -45,6 +45,14 @@ class GameOverScreen(private val background: Screen, private val font: BitmapFon
         }
         return false
       }
+
+      override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
+        if (button == Input.Buttons.LEFT) {
+          keyDown(Input.Keys.SPACE)
+        }
+        return false
+      }
+
     }
   }
 

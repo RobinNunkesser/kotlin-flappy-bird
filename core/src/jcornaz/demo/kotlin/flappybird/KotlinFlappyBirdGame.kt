@@ -14,39 +14,39 @@ import ktx.freetype.async.registerFreeTypeFontLoaders
 
 class KotlinFlappyBirdGame : KtxGame<Screen>(), CoroutineScope by LibGdxScope() {
 
-  private lateinit var assetStorage: AssetStorage
+    private lateinit var assetStorage: AssetStorage
 
-  override fun create() {
-    KtxAsync.initiate()
-    Box2D.init()
+    override fun create() {
+        KtxAsync.initiate()
+        Box2D.init()
 
-    assetStorage = AssetStorage().apply {
-      registerFreeTypeFontLoaders()
+        assetStorage = AssetStorage().apply {
+            registerFreeTypeFontLoaders()
+        }
+
+        launch {
+            val bundle = AssetBundle.load(assetStorage)
+
+            do {
+                val mainScreen = MainScreen(bundle)
+
+                show(StartingScreen(mainScreen, bundle.font))
+                show(mainScreen)
+                show(GameOverScreen(mainScreen, bundle.font))
+
+            } while (isActive)
+        }
     }
 
-    launch {
-      val bundle = AssetBundle.load(assetStorage)
-
-      do {
-        val mainScreen = MainScreen(bundle)
-
-        show(StartingScreen(mainScreen, bundle.font))
-        show(mainScreen)
-        show(GameOverScreen(mainScreen, bundle.font))
-
-      } while (isActive)
+    private suspend inline fun <reified T : EndableScreen> show(screen: T) {
+        addScreen(screen)
+        setScreen<T>()
+        screen.awaitEnd()
+        removeScreen<T>()
     }
-  }
 
-  private suspend inline fun <reified T : EndableScreen> show(screen: T) {
-    addScreen(screen)
-    setScreen<T>()
-    screen.awaitEnd()
-    removeScreen<T>()
-  }
-
-  override fun dispose() {
-    cancel()
-    assetStorage.dispose()
-  }
+    override fun dispose() {
+        cancel()
+        assetStorage.dispose()
+    }
 }

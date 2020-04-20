@@ -1,6 +1,7 @@
 package jcornaz.demo.kotlin.flappybird.screen
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.scenes.scene2d.Actor
@@ -16,6 +17,7 @@ import jcornaz.demo.kotlin.flappybird.actor.floorCycle
 import jcornaz.demo.kotlin.flappybird.actor.pipeDoorCycle
 import jcornaz.demo.kotlin.flappybird.physics.GameWorld
 import ktx.actors.plusAssign
+import ktx.app.KtxInputAdapter
 import ktx.app.KtxScreen
 import ktx.app.clearScreen
 import ktx.graphics.use
@@ -46,10 +48,24 @@ class MainScreen(private val assetBundle: AssetBundle) : EndableScreen(), KtxScr
     stage += bird
 
     stage.keyboardFocus = bird
+
   }
 
   override fun show() {
-    Gdx.input.inputProcessor = stage
+      Gdx.input.inputProcessor = object : KtxInputAdapter {
+          override fun keyDown(keycode: Int): Boolean {
+              stage.keyDown(keycode)
+              return false
+          }
+
+          override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
+              if (button == Input.Buttons.LEFT) {
+                  stage.keyDown(Input.Keys.SPACE)
+              }
+              return false
+          }
+
+      }
   }
 
   override fun render(delta: Float) {
